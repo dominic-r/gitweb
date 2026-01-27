@@ -212,8 +212,8 @@ void cgit_free_reflist_inner(struct reflist *list)
 	free(list->refs);
 }
 
-int cgit_refs_cb(const char *refname, const struct object_id *oid, int flags,
-		  void *cb_data)
+int cgit_refs_cb(const char *refname, const char *referent UNUSED,
+		  const struct object_id *oid, int flags, void *cb_data)
 {
 	struct reflist *list = (struct reflist *)cb_data;
 	struct refinfo *info = cgit_mk_refinfo(refname, oid);
@@ -243,7 +243,7 @@ static int load_mmfile(mmfile_t *file, const struct object_id *oid)
 		file->ptr = (char *)"";
 		file->size = 0;
 	} else {
-		file->ptr = repo_read_object_file(the_repository, oid, &type,
+		file->ptr = odb_read_object(the_repository->objects, oid, &type,
 		                           (unsigned long *)&file->size);
 	}
 	return 1;
@@ -395,7 +395,7 @@ int cgit_parse_snapshots_mask(const char *str)
 	if (strcmp(str, "all") == 0)
 		return INT_MAX;
 
-	string_list_split(&tokens, str, ' ', -1);
+	string_list_split(&tokens, str, " ", -1);
 	string_list_remove_empty_items(&tokens, 0);
 
 	for_each_string_list_item(item, &tokens) {

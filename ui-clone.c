@@ -14,10 +14,10 @@
 #include "html.h"
 #include "ui-shared.h"
 #include "packfile.h"
-#include "object-store.h"
+#include "odb.h"
 
-static int print_ref_info(const char *refname, const struct object_id *oid,
-                          int flags, void *cb_data)
+static int print_ref_info(const char *refname, const char *referent UNUSED,
+                          const struct object_id *oid, int flags, void *cb_data)
 {
 	struct object *obj;
 
@@ -41,8 +41,8 @@ static void print_pack_info(void)
 	ctx.page.mimetype = "text/plain";
 	ctx.page.filename = "objects/info/packs";
 	cgit_print_http_headers();
-	reprepare_packed_git(the_repository);
-	for (pack = get_packed_git(the_repository); pack; pack = pack->next) {
+	packfile_store_reprepare(the_repository->objects->packfiles);
+	for (pack = packfile_store_get_packs(the_repository->objects->packfiles); pack; pack = pack->next) {
 		if (pack->pack_local) {
 			offset = strrchr(pack->pack_name, '/');
 			if (offset && offset[1] != '\0')
@@ -116,7 +116,7 @@ void cgit_clone_objects(void)
 			goto err;
 	}
 
-	send_file(git_path("objects/%s", ctx.qry.path));
+	send_file(repo_git_path(the_repository, "objects/%s", ctx.qry.path));
 	return;
 
 err:
@@ -125,5 +125,5 @@ err:
 
 void cgit_clone_head(void)
 {
-	send_file(git_path("%s", "HEAD"));
+	send_file(repo_git_path(the_repository, "HEAD"));
 }

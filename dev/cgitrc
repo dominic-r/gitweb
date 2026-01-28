@@ -1,0 +1,18 @@
+# cgit development config
+
+css=/cgit.css
+logo=/cgit.png
+favicon=/favicon.ico
+
+root-title=cgit (dev)
+root-desc=Local development
+
+# Scan all repos under ~/Developer
+scan-path=/Users/dominic/Developer/
+
+# Disable cache for dev
+cache-size=0
+
+enable-blame=1
+enable-git-config=1
+side-by-side-diffs=1

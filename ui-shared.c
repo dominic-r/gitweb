@@ -834,6 +834,7 @@ void cgit_print_docstart(void)
 	html_txt(ctx.page.title);
 	html("</title>\n");
 	htmlf("<meta name='generator' content='cgit %s'/>\n", cgit_version);
+	html("<meta name='viewport' content='width=device-width, initial-scale=1'/>\n");
 	if (ctx.cfg.robots && *ctx.cfg.robots)
 		htmlf("<meta name='robots' content='%s'/>\n", ctx.cfg.robots);
 

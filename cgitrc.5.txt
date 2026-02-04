@@ -282,10 +282,10 @@ max-repodesc-length::
 	Specifies the maximum number of repo description characters to display
 	on the repository index page. Default value: "80".
 
-max-stats::
-	Set the default maximum statistics period. Valid values are "week",
-	"month", "quarter" and "year". If unspecified, statistics are
-	disabled. Default value: none. See also: "repo.max-stats".
+	max-stats::
+		Set the default maximum statistics period. Valid values are "week",
+		"month", "quarter" and "year". Default value: "week". See also:
+		"repo.max-stats".
 
 mimetype.<ext>::
 	Set the mimetype for the specified filename extension. This is used

@@ -162,7 +162,7 @@ int cgit_find_stats_period(const char *expr, const struct cgit_period **period)
 
 const char *cgit_find_stats_periodname(int idx)
 {
-	if (idx > 0 && idx < 4)
+	if (idx > 0 && idx <= ARRAY_SIZE(periods))
 		return periods[idx - 1].name;
 	else
 		return "";
@@ -370,7 +370,7 @@ void cgit_show_stats(void)
 {
 	struct string_list authors;
 	const struct cgit_period *period;
-	int top, i;
+	int top, i, max_stats;
 	const char *code = "w";
 
 	if (ctx.qry.period)
@@ -382,9 +382,12 @@ void cgit_show_stats(void)
 			"Unknown statistics type: %c", code[0]);
 		return;
 	}
-	if (i > ctx.repo->max_stats) {
+	max_stats = ctx.repo->max_stats ? ctx.repo->max_stats : ctx.cfg.max_stats;
+	if (!max_stats)
+		max_stats = cgit_find_stats_period("week", NULL);
+	if (i > max_stats) {
 		cgit_print_error_page(400, "Bad request",
-			"Statistics type disabled: %s", period->name);
+				"Statistics type disabled: %s", period->name);
 		return;
 	}
 	authors = collect_stats(period);
@@ -401,10 +404,10 @@ void cgit_show_stats(void)
 	html("<form method='get'>");
 	cgit_add_hidden_formfields(1, 0, "stats");
 	html("<table><tr><td colspan='2'/></tr>");
-	if (ctx.repo->max_stats > 1) {
+	if (max_stats > 1) {
 		html("<tr><td class='label'>Period:</td>");
 		html("<td class='ctrl'><select name='period' onchange='this.form.submit();'>");
-		for (i = 0; i < ctx.repo->max_stats; i++)
+		for (i = 0; i < max_stats; i++)
 			html_option(fmt("%c", periods[i].code),
 				    periods[i].name, fmt("%c", period->code));
 		html("</select></td></tr>");
@@ -432,4 +435,3 @@ void cgit_show_stats(void)
 	print_authors(&authors, top, period);
 	cgit_print_layout_end();
 }
-

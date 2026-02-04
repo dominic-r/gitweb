@@ -86,8 +86,11 @@ static void repo_config(struct cgit_repo *repo, const char *name, const char *va
 			repo->commit_sort = 1;
 		if (!strcmp(value, "topo"))
 			repo->commit_sort = 2;
-	} else if (!strcmp(name, "max-stats"))
-		repo->max_stats = cgit_find_stats_period(value, NULL);
+	} else if (!strcmp(name, "max-stats")) {
+		int max_stats = cgit_find_stats_period(value, NULL);
+		if (max_stats)
+			repo->max_stats = max_stats;
+	}
 	else if (!strcmp(name, "module-link"))
 		repo->module_link= xstrdup(value);
 	else if (skip_prefix(name, "module-link.", &path)) {
@@ -199,8 +202,11 @@ static void config_cb(const char *name, const char *value)
 		ctx.cfg.enable_tree_linenumbers = atoi(value);
 	else if (!strcmp(name, "enable-git-config"))
 		ctx.cfg.enable_git_config = atoi(value);
-	else if (!strcmp(name, "max-stats"))
-		ctx.cfg.max_stats = cgit_find_stats_period(value, NULL);
+	else if (!strcmp(name, "max-stats")) {
+		int max_stats = cgit_find_stats_period(value, NULL);
+		if (max_stats)
+			ctx.cfg.max_stats = max_stats;
+	}
 	else if (!strcmp(name, "cache-size"))
 		ctx.cfg.cache_size = atoi(value);
 	else if (!strcmp(name, "cache-root"))
@@ -395,7 +401,7 @@ static void prepare_context(void)
 	ctx.cfg.max_msg_len = 80;
 	ctx.cfg.max_repodesc_len = 80;
 	ctx.cfg.max_blob_size = 0;
-	ctx.cfg.max_stats = 0;
+	ctx.cfg.max_stats = cgit_find_stats_period("week", NULL);
 	ctx.cfg.project_list = NULL;
 	ctx.cfg.renamelimit = -1;
 	ctx.cfg.remove_suffix = 0;

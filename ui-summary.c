@@ -6,6 +6,8 @@
  *   (see COPYING for full license text)
  */
 
+#define USE_THE_REPOSITORY_VARIABLE
+
 #include "cgit.h"
 #include "ui-summary.h"
 #include "html.h"
@@ -16,6 +18,57 @@
 #include "ui-shared.h"
 
 static int urls;
+
+static const char *disambiguate_ref(const char *ref, int *must_free_result)
+{
+	struct object_id oid;
+	struct strbuf longref = STRBUF_INIT;
+
+	strbuf_addf(&longref, "refs/heads/%s", ref);
+	if (repo_get_oid(the_repository, longref.buf, &oid) == 0) {
+		*must_free_result = 1;
+		return strbuf_detach(&longref, NULL);
+	}
+
+	*must_free_result = 0;
+	strbuf_release(&longref);
+	return ref;
+}
+
+static int get_commit_count(const char *tip, unsigned long *count)
+{
+	struct rev_info rev;
+	struct commit *commit;
+	struct strvec rev_argv = STRVEC_INIT;
+	int must_free_tip = 0;
+
+	*count = 0;
+	tip = disambiguate_ref(tip ? tip : "HEAD", &must_free_tip);
+	strvec_push(&rev_argv, "summary_rev_setup");
+	strvec_push(&rev_argv, tip);
+
+	repo_init_revisions(the_repository, &rev, NULL);
+	rev.ignore_missing = 1;
+	setup_revisions(rev_argv.nr, rev_argv.v, &rev, NULL);
+	strvec_clear(&rev_argv);
+
+	if (prepare_revision_walk(&rev)) {
+		if (must_free_tip)
+			free((char *)tip);
+		return 0;
+	}
+
+	while ((commit = get_revision(&rev)) != NULL) {
+		(*count)++;
+		release_commit_memory(the_repository->parsed_objects, commit);
+		commit->parents = NULL;
+	}
+
+	if (must_free_tip)
+		free((char *)tip);
+
+	return 1;
+}
 
 static void print_url(const char *url)
 {
@@ -43,6 +96,7 @@ static void print_url(const char *url)
 void cgit_print_summary(void)
 {
 	int columns = 3;
+	unsigned long commit_count = 0;
 
 	if (ctx.repo->enable_log_filecount)
 		columns++;
@@ -51,6 +105,10 @@ void cgit_print_summary(void)
 
 	cgit_print_layout_start();
 	html("<table summary='repository info' class='list nowrap'>");
+	if (get_commit_count(ctx.qry.head, &commit_count))
+		htmlf("<tr class='nohover'><th class='left'>Commits</th><td colspan='%d'>%lu</td></tr>\n",
+		      columns - 1, commit_count);
+	htmlf("<tr class='nohover'><td colspan='%d'>&nbsp;</td></tr>", columns);
 	cgit_print_branches(ctx.cfg.summary_branches);
 	htmlf("<tr class='nohover'><td colspan='%d'>&nbsp;</td></tr>", columns);
 	cgit_print_tags(ctx.cfg.summary_tags);

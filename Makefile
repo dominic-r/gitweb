@@ -14,7 +14,7 @@ htmldir = $(docdir)
 pdfdir = $(docdir)
 mandir = $(prefix)/share/man
 SHA1_HEADER = <openssl/sha.h>
-GIT_VER = 2.52.0
+GIT_VER = 2.53.0
 GIT_URL = https://www.kernel.org/pub/software/scm/git/git-$(GIT_VER).tar.xz
 INSTALL = install
 COPYTREE = cp -r
@@ -73,10 +73,10 @@ endif
 all:: cgit
 
 cgit:
-	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) -f ../cgit.mk ../cgit $(EXTRA_GIT_TARGETS) NO_CURL=1
+	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) -f ../cgit.mk ../cgit $(EXTRA_GIT_TARGETS) NO_CURL=1 GIT_VERSION=$(GIT_VER)
 
 sparse:
-	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) -f ../cgit.mk NO_CURL=1 cgit-sparse
+	$(QUIET_SUBDIR0)git $(QUIET_SUBDIR1) -f ../cgit.mk NO_CURL=1 cgit-sparse GIT_VERSION=$(GIT_VER)
 
 test:
 	@$(MAKE) --no-print-directory cgit EXTRA_GIT_TARGETS=all

@@ -27,6 +27,7 @@
 #include "ui-tag.h"
 #include "ui-tree.h"
 #include "ui-search.h"
+#include "ui-compare.h"
 
 static void HEAD_fn(void)
 {
@@ -76,6 +77,11 @@ static void blame_fn(void)
 static void blob_fn(void)
 {
 	cgit_print_blob(ctx.qry.oid, ctx.qry.path, ctx.qry.head, 0);
+}
+
+static void compare_fn(void)
+{
+	cgit_print_compare();
 }
 
 static void commit_fn(void)
@@ -182,6 +188,7 @@ struct cgit_cmd *cgit_get_cmd(void)
 		def_cmd(blame, 1, 1, 0),
 		def_cmd(blob, 1, 0, 0),
 		def_cmd(commit, 1, 1, 0),
+		def_cmd(compare, 1, 1, 0),
 		def_cmd(diff, 1, 1, 0),
 		def_cmd(info, 1, 0, 1),
 		def_cmd(log, 1, 1, 0),

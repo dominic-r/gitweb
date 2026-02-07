@@ -481,6 +481,27 @@ void cgit_snapshot_link(const char *name, const char *title, const char *class,
 	reporevlink("snapshot", name, title, class, head, rev, archivename);
 }
 
+void cgit_compare_link(const char *name, const char *title, const char *class,
+		       const char *head, const char *new_rev,
+		       const char *old_rev)
+{
+	char *delim;
+
+	delim = repolink(title, class, "compare", head, NULL);
+	if (new_rev && old_rev) {
+		html(delim);
+		html("id=");
+		html_url_arg(old_rev);
+		delim = "&amp;";
+		html(delim);
+		html("id2=");
+		html_url_arg(new_rev);
+	}
+	html("'>");
+	html_txt(name);
+	html("</a>");
+}
+
 void cgit_diff_link(const char *name, const char *title, const char *class,
 		    const char *head, const char *new_rev, const char *old_rev,
 		    const char *path)
@@ -581,6 +602,9 @@ static void cgit_self_link(char *name, const char *title, const char *class)
 		cgit_snapshot_link(name, title, class, ctx.qry.head,
 				   ctx.qry.has_oid ? ctx.qry.oid : NULL,
 				   ctx.qry.path);
+	else if (!strcmp(ctx.qry.page, "compare"))
+		cgit_compare_link(name, title, class, ctx.qry.head,
+				  ctx.qry.oid, ctx.qry.oid2);
 	else if (!strcmp(ctx.qry.page, "diff"))
 		cgit_diff_link(name, title, class, ctx.qry.head,
 			       ctx.qry.oid, ctx.qry.oid2,
@@ -1199,6 +1223,27 @@ void cgit_print_pageheader(void)
 			html(")");
 		}
 		html("</div>");
+	}
+	if (ctx.env.authenticated && ctx.repo && ctx.qry.head &&
+	    ctx.repo->defbranch && strcmp(ctx.qry.head, ctx.repo->defbranch)) {
+		char *compare_url;
+		struct strbuf query = STRBUF_INIT;
+
+		strbuf_addf(&query, "id=%s&id2=%s",
+			    ctx.repo->defbranch, ctx.qry.head);
+		compare_url = cgit_pageurl(ctx.repo->url, "compare",
+					   query.buf);
+		html("<div class='compare-banner'>");
+		html("Viewing branch <strong>");
+		html_txt(ctx.qry.head);
+		html("</strong> · <a href='");
+		html_attr(compare_url);
+		html("'>Compare with ");
+		html_txt(ctx.repo->defbranch);
+		html("</a>");
+		html("</div>");
+		strbuf_release(&query);
+		free(compare_url);
 	}
 	html("<div class='content'>");
 }

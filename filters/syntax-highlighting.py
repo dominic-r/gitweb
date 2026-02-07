@@ -34,8 +34,7 @@ sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors='replace
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 data = sys.stdin.read()
 filename = sys.argv[1]
-light_formatter = HtmlFormatter(style='pastie', nobackground=True)
-dark_formatter = HtmlFormatter(style='native', nobackground=True)
+formatter = HtmlFormatter(nowrap=False, nobackground=True)
 
 try:
 	lexer = guess_lexer_for_filename(filename, data)
@@ -49,12 +48,4 @@ except TypeError:
 	lexer = TextLexer()
 
 # highlight! :-)
-# printout pygments' css definitions as well
-sys.stdout.write('<style>')
-sys.stdout.write(light_formatter.get_style_defs('.highlight'))
-sys.stdout.write(dark_formatter.get_style_defs('html[data-theme="dark"] .highlight'))
-sys.stdout.write('@media (prefers-color-scheme: dark) {')
-sys.stdout.write(dark_formatter.get_style_defs('html:not([data-theme="light"]) .highlight'))
-sys.stdout.write('}')
-sys.stdout.write('</style>')
-sys.stdout.write(highlight(data, lexer, light_formatter, outfile=None))
+sys.stdout.write(highlight(data, lexer, formatter))

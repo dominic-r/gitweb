@@ -65,22 +65,22 @@
 	--lineno-color: #888888;
 	--lineno-hover: #000000;
 
-	--hl-comment: #6a737d;
-	--hl-keyword: #d73a49;
-	--hl-string: #032f62;
-	--hl-number: #005cc5;
-	--hl-function: #6f42c1;
-	--hl-type: #005cc5;
-	--hl-operator: #d73a49;
-	--hl-decorator: #e36209;
-	--hl-builtin: #005cc5;
-	--hl-attribute: #005cc5;
-	--hl-namespace: #005cc5;
-	--hl-tag: #22863a;
-	--hl-variable: #e36209;
-	--hl-entity: #6f42c1;
-	--hl-label: #005cc5;
-	--hl-constant: #005cc5;
+	--hl-comment: #9699a3;
+	--hl-keyword: #7c3aed;
+	--hl-string: #587539;
+	--hl-number: #965027;
+	--hl-function: #2e7de9;
+	--hl-type: #007197;
+	--hl-operator: #006a83;
+	--hl-decorator: #965027;
+	--hl-builtin: #387068;
+	--hl-attribute: #387068;
+	--hl-namespace: #007197;
+	--hl-tag: #f52a65;
+	--hl-variable: #343b58;
+	--hl-entity: #8c6c3e;
+	--hl-label: #2e7de9;
+	--hl-constant: #965027;
 
 	color-scheme: light dark;
 }
@@ -152,22 +152,22 @@
 		--lineno-color: #666666;
 		--lineno-hover: #cccccc;
 
-		--hl-comment: #6a9955;
-		--hl-keyword: #c586c0;
-		--hl-string: #ce9178;
-		--hl-number: #b5cea8;
-		--hl-function: #dcdcaa;
-		--hl-type: #4ec9b0;
-		--hl-operator: #d4d4d4;
-		--hl-decorator: #dcdcaa;
-		--hl-builtin: #4fc1ff;
-		--hl-attribute: #9cdcfe;
-		--hl-namespace: #4ec9b0;
-		--hl-tag: #569cd6;
-		--hl-variable: #9cdcfe;
-		--hl-entity: #d7ba7d;
-		--hl-label: #9cdcfe;
-		--hl-constant: #4fc1ff;
+		--hl-comment: #565f89;
+		--hl-keyword: #bb9af7;
+		--hl-string: #9ece6a;
+		--hl-number: #ff9e64;
+		--hl-function: #7aa2f7;
+		--hl-type: #2ac3de;
+		--hl-operator: #89ddff;
+		--hl-decorator: #ff9e64;
+		--hl-builtin: #7dcfff;
+		--hl-attribute: #73daca;
+		--hl-namespace: #2ac3de;
+		--hl-tag: #f7768e;
+		--hl-variable: #c0caf5;
+		--hl-entity: #e0af68;
+		--hl-label: #7aa2f7;
+		--hl-constant: #ff9e64;
 	}
 }
 

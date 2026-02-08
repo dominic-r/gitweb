@@ -1,6 +1,6 @@
 all::
 
-CGIT_VERSION = v2.7.0
+CGIT_VERSION = v2.8.0
 CGIT_SCRIPT_NAME = cgit.cgi
 CGIT_SCRIPT_PATH = /var/www/htdocs/cgit
 CGIT_DATA_PATH = $(CGIT_SCRIPT_PATH)

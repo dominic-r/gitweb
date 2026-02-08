@@ -14,11 +14,36 @@
 #include "html.h"
 #include "strvec.h"
 
+static void print_branch_datalist(void)
+{
+	struct reflist list;
+	int i;
+
+	list.refs = NULL;
+	list.alloc = list.count = 0;
+	refs_for_each_branch_ref(get_main_ref_store(the_repository),
+				 cgit_refs_cb, &list);
+	if (ctx.repo->enable_remote_branches)
+		refs_for_each_remote_ref(get_main_ref_store(the_repository),
+					 cgit_refs_cb, &list);
+
+	html("<datalist id='compare-branches'>\n");
+	for (i = 0; i < list.count; i++) {
+		html("<option value='");
+		html_attr(list.refs[i]->refname);
+		html("'>");
+	}
+	html("</datalist>\n");
+
+	cgit_free_reflist_inner(&list);
+}
+
 static void print_compare_form(const char *base_ref, const char *head_ref)
 {
 	char *url;
 
 	html("<div class='compare-form'>");
+	print_branch_datalist();
 	html("<form method='get' action='");
 	if (ctx.cfg.virtual_root) {
 		url = cgit_pageurl(ctx.repo->url, "compare", NULL);
@@ -36,12 +61,12 @@ static void print_compare_form(const char *base_ref, const char *head_ref)
 	    strcmp(ctx.qry.head, ctx.repo->defbranch))
 		html_hidden("h", ctx.qry.head);
 	html("<table><tr>");
-	html("<td><input type='text' name='id' value='");
+	html("<td><input type='text' name='id' list='compare-branches' value='");
 	if (base_ref)
 		html_attr(base_ref);
 	html("' placeholder='base' size='20'/></td>");
 	html("<td> ... </td>");
-	html("<td><input type='text' name='id2' value='");
+	html("<td><input type='text' name='id2' list='compare-branches' value='");
 	if (head_ref)
 		html_attr(head_ref);
 	html("' placeholder='compare' size='20'/></td>");

@@ -14,7 +14,7 @@ cache-size=0
 enable-blame=1
 enable-git-config=1
 side-by-side-diffs=1
-source-filter=/Users/dominic/Developer/s/apps/cgit/filters/syntax-highlighting.py
+source-filter=/Users/dominic/Developer/s/apps/gitweb/filters/syntax-highlighting.py
 
 # Scan all repos under ~/Developer
 remove-suffix=1

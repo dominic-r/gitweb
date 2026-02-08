@@ -62,6 +62,8 @@
 	--age-years: #bbbbbb;
 
 	--code-bg: #f8f8f8;
+	--line-hl-bg: rgba(255, 248, 197, 0.5);
+	--line-hl-border: #d4a72c;
 	--lineno-color: #888888;
 	--lineno-hover: #000000;
 
@@ -149,6 +151,8 @@
 		--age-years: #444444;
 
 		--code-bg: #1e1e1e;
+		--line-hl-bg: rgba(42, 32, 0, 0.5);
+		--line-hl-border: #d4a72c;
 		--lineno-color: #666666;
 		--lineno-hover: #cccccc;
 
@@ -234,6 +238,8 @@
 	--age-years: #444444;
 
 	--code-bg: #1e1e1e;
+	--line-hl-bg: rgba(42, 32, 0, 0.5);
+	--line-hl-border: #d4a72c;
 	--lineno-color: #666666;
 	--lineno-hover: #cccccc;
 
@@ -615,6 +621,28 @@ div#cgit table.ssdiff td.lineno a {
 div#cgit table.blob td.linenumbers a:hover,
 div#cgit table.ssdiff td.lineno a:hover {
 	color: var(--lineno-hover);
+}
+div#cgit table.blob td.linenumbers a.line-hl {
+	background: var(--line-hl-bg);
+	color: var(--lineno-hover);
+	display: inline-block;
+	width: 100%;
+	border-right: 2px solid var(--line-hl-border);
+	margin-right: -0.5em;
+	padding-right: calc(0.5em - 2px);
+}
+div#cgit table.blob .line-highlight-overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+	background: var(--line-hl-bg);
+	border-left: 2px solid var(--line-hl-border);
+	pointer-events: none;
+	z-index: 0;
+}
+div#cgit table.blob td.linenumbers {
+	cursor: pointer;
+	user-select: none;
 }
 
 div#cgit table.blame td.hashes,

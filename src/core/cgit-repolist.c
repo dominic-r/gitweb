@@ -218,7 +218,7 @@ void cgit_parse_args(int argc, const char **argv)
 
 	for (i = 1; i < argc; i++) {
 		if (!strcmp(argv[i], "--version")) {
-			printf("CGit %s | https://github.com/dominic-r/cgit\n\nCompiled in features:\n", cgit_version);
+			printf("CGit %s | https://github.com/dominic-r/gitweb\n\nCompiled in features:\n", cgit_version);
 #ifdef NO_LUA
 			printf("[-] ");
 #else
